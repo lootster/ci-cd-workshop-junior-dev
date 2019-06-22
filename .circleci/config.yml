@@ -12,6 +12,12 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: npm install && npm test
+  deploy:  
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: circleci/node:10.15.3 # the primary container, where your job's commands are run
+    steps:
+      - checkout # check out the code in the project directory
+      - run: git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
 workflows:
   version: 2
   build_and_test:
@@ -20,3 +26,6 @@ workflows:
       - test:
           requires:
             - lint
+      - deploy:
+          requires:
+            - test
