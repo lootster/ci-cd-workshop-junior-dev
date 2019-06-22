@@ -6,8 +6,17 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: npx eslint src/feature1.js # run the `echo` command
+  test:  
+    docker: # use the docker executor type; machine and macos executors are also supported
+      - image: circleci/node:10.15.3 # the primary container, where your job's commands are run
+    steps:
+      - checkout # check out the code in the project directory
+      - run: npm install && npm test
 workflows:
   version: 2
   workflow1:
     jobs:
       - lint
+      - test:
+          require:
+            - lint
